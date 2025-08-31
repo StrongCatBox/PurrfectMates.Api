@@ -1,0 +1,6 @@
+@PurrfectMates.Api_HostAddress = http://localhost:5237
+
+GET {{PurrfectMates.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
