@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PurrfectMates.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 
 namespace PurrfectMates.Api.Data
 {
 
     // Ici, j’hérite de IdentityDbContext<ApplicationUser> ça ajoute automatiquement
-    public class AppDbContext : IdentityDbContext<ApplicationUser>
+    public class AppDbContext : DbContext
     {
 
         // Constructeur  il reçoit les options (connexion SQL, provider utilisé)
@@ -23,9 +22,6 @@ namespace PurrfectMates.Api.Data
         public DbSet<TailleAnimal> TaillesAnimaux => Set<TailleAnimal>();
         public DbSet<TypeAnimal> TypesAnimaux => Set<TypeAnimal>();
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-        }
+       
     }
 }
