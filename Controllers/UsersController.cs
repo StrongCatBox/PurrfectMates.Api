@@ -64,7 +64,7 @@ namespace PurrfectMates.Api.Controllers
                 nomUtilisateur = dto.nomUtilisateur,
                 prenomUtilisateur = dto.prenomUtilisateur,
                 emailUtilisateur = dto.emailUtilisateur,
-                motDePasseUtilisateur = dto.motDePasseUtilisateur, // ⚠️ plus tard : à hasher
+                //motDePasseUtilisateur = dto.motDePasseUtilisateur, // ⚠️ plus tard : à hasher
                 Role = dto.Role,        // ← au lieu de role = dto.role
 
                 photoProfilUtilisateur = dto.photoProfilUtilisateur

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;                  // Pour gérer les utilisa
 using Microsoft.EntityFrameworkCore;                  // Pour utiliser Entity Framework Core (accès SQL)
 using Microsoft.IdentityModel.Tokens;                 // Pour configurer la validation des tokens JWT
 using PurrfectMates.Api.Data;                         // Pour accéder à AppDbContext et ApplicationUser
+using PurrfectMates.Api.Services;
 using System.Text;                                    // Pour encoder la clé secrète JWT
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,9 @@ builder.Services.AddControllers();
 // Swagger permet de tester l’API dans un navigateur (interface interactive)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
 
 // Politique CORS pour autoriser les appels depuis mon front 
 builder.Services.AddCors(o => o.AddPolicy("frontend", b => b
@@ -63,6 +67,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Ajoute le système d’autorisation (vérifie les rôles, [Authorize] sur les contrôleurs, etc.)
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<JwtService>();
 
 var app = builder.Build();
 
