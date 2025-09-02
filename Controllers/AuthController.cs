@@ -26,7 +26,7 @@ namespace PurrfectMates.Api.Controllers
             _config = config;
         }
 
-        // ✅ Inscription
+        //  Inscription
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
@@ -52,7 +52,7 @@ namespace PurrfectMates.Api.Controllers
             return Ok(new { Token = GenererJwt(user) });
         }
 
-        // ✅ Connexion
+        // Connexion
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
@@ -67,7 +67,7 @@ namespace PurrfectMates.Api.Controllers
             return Ok(new { Token = GenererJwt(user) });
         }
 
-        // ✅ Infos utilisateur connecté
+        // Infos utilisateur connecté
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
@@ -85,7 +85,7 @@ namespace PurrfectMates.Api.Controllers
             });
         }
 
-        // ⚡ Génération JWT
+        // Génération JWT
         private string GenererJwt(Utilisateur user)
         {
             var jwt = _config.GetSection("Jwt");

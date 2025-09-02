@@ -17,6 +17,7 @@ namespace PurrfectMates.Api.Dtos
         [Required, MinLength(6)]
         public string MotDePasse { get; set; } = "";
 
+
         public Role Role { get; set; } = Role.Adoptant;
     }
 }

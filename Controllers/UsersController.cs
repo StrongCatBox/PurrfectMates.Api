@@ -24,7 +24,7 @@ namespace PurrfectMates.Api.Controllers
                     nomUtilisateur = u.nomUtilisateur,
                     prenomUtilisateur = u.prenomUtilisateur,
                     emailUtilisateur = u.emailUtilisateur,
-                    Role = u.Role,          // ← au lieu de x.role
+                    Role = u.Role,          //  au lieu de x.role
 
                     photoProfilUtilisateur = u.photoProfilUtilisateur
                 })
