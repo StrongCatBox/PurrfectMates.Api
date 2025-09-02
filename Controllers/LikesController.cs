@@ -19,7 +19,7 @@ namespace PurrfectMates.Api.Controllers
 
         // Un adoptant peut liker ou disliker un animal
         [Authorize(Roles = "Adoptant")]
-        [HttpPost("{animalId:int}")]
+        [HttpPost("{animalId}")]
         public async Task<IActionResult> Swipe(int animalId, [FromQuery] string action)
         {
             try

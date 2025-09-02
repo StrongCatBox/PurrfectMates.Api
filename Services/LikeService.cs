@@ -8,31 +8,41 @@ namespace PurrfectMates.Api.Services
     {
         private readonly AppDbContext _db;
 
+        // J’injecte le DbContext pour pouvoir accéder à la base de données
         public LikeService(AppDbContext db)
         {
             _db = db;
         }
 
-        // Ajouter un swipe (like ou dislike)
+        // Cette méthode ajoute un swipe (soit un "like", soit un "pass")
         public async Task<Like> AjouterLikeAsync(int userId, int animalId, string action)
         {
-            // Vérifier si un like existe déjà
+            // Je normalise l’action (tout en minuscules)
+            action = action.ToLower();
+
+            // Je vérifie que l’action est bien "like" ou "pass"
+            if (action != "like" && action != "pass")
+                throw new Exception("Action invalide. Utilisez uniquement 'like' ou 'pass'.");
+
+            // Je vérifie si cet utilisateur a déjà swipé cet animal
             if (await _db.Likes.AnyAsync(l => l.idUtilisateur == userId && l.idAnimal == animalId))
                 throw new Exception("Vous avez déjà swipé cet animal");
 
+            // Je crée un objet Like qui sera inséré dans la table Swipe
             var like = new Like
             {
                 idUtilisateur = userId,
                 idAnimal = animalId,
-                actionSwipe = action,
-                dateSwipe = DateTime.UtcNow
+                actionSwipe = action,        // ici j’enregistre "like" ou "pass"
+                dateSwipe = DateTime.UtcNow // je stocke la date du swipe
             };
 
+            // J’ajoute le Like dans la base
             _db.Likes.Add(like);
             await _db.SaveChangesAsync();
 
-            // Si action = "like", vérifier et créer un match
-            if (action.ToLower() == "like")
+            // Si c’est un "like", je crée aussi une entrée dans la table Matching
+            if (action == "like")
             {
                 var match = new Match
                 {
@@ -46,6 +56,7 @@ namespace PurrfectMates.Api.Services
                 await _db.SaveChangesAsync();
             }
 
+            // Je retourne le Like créé (utile pour le contrôleur / Swagger)
             return like;
         }
     }

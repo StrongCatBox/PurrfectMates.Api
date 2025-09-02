@@ -67,7 +67,7 @@ namespace PurrfectMates.Api.Controllers
             return Ok(new { Token = GenererJwt(user) });
         }
 
-        // Infos utilisateur connecté
+        // Infos utilisateur connectégit status
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
