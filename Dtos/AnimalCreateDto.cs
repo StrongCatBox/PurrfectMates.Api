@@ -5,7 +5,6 @@
         public string nomAnimal { get; set; } = default!;
         public string race { get; set; } = default!;
         public int age { get; set; }
-        public int IdUtilisateur { get; set; }
         public int IdNiveauActivite { get; set; }
         public int IdTailleAnimal { get; set; }
         public int IdTypeAnimal { get; set; }

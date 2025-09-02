@@ -42,7 +42,7 @@ namespace PurrfectMates.Api.Controllers
                 prenomUtilisateur = dto.Prenom,
                 emailUtilisateur = dto.Email,
                 motDePasseUtilisateurHash = hash,
-                Role = Enums.Role.Adoptant, // ou dto.Role si tu veux le choisir
+                Role = dto.Role,
                 photoProfilUtilisateur = null
             };
 

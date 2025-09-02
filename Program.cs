@@ -3,12 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models; //  nécessaire pour Swagger + sécurité JWT
 using PurrfectMates.Api.Data;
+using PurrfectMates.Api.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //  Ici j’ajoute le support des contrôleurs et de Swagger (documentation interactive de mon API)
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });  //ici je convertis les string en json
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -59,6 +64,12 @@ var cs = builder.Configuration.GetConnectionString("SqlServer");
 
 //  J’ajoute Entity Framework Core pour dialoguer avec ma base SQL Server
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(cs));
+
+
+//ici j'ajoute mon service métier LikeService
+
+builder.Services.AddScoped<LikeService>();
+
 
 //  Ici je configure l’authentification JWT (token sécurisé pour mes utilisateurs)
 var jwt = builder.Configuration.GetSection("Jwt");
