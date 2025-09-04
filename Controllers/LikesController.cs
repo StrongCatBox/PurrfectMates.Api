@@ -43,5 +43,23 @@ namespace PurrfectMates.Api.Controllers
                 return BadRequest(new { Erreur = ex.Message });
             }
         }
+
+
+        // Récupérer l’historique des swipes d’un utilisateur
+        [Authorize(Roles = "Adoptant")]
+        [HttpGet]
+        public async Task<IActionResult> GetMySwipes()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var swipes = await _likeService.GetSwipesByUserAsync(userId);
+
+            return Ok(swipes.Select(s => new {
+                s.idAnimal,
+                s.actionSwipe,
+                s.dateSwipe
+            }));
+        }
+
     }
 }

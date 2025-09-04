@@ -59,5 +59,23 @@ namespace PurrfectMates.Api.Services
             // Je retourne le Like créé (utile pour le contrôleur / Swagger)
             return like;
         }
+
+        public async Task<List<Like>> GetSwipesByUserAsync(int userId)
+        {
+            return await _db.Likes
+                .Where(l => l.idUtilisateur == userId)
+                .OrderByDescending(l => l.dateSwipe)
+                .ToListAsync();
+        }
+
+        public async Task<List<Match>> GetMatchesByUserAsync(int userId)
+        {
+            return await _db.Matches
+                .Where(m => m.UtilisateurId == userId && m.EstAime == true)
+                .Include(m => m.Animal) // pour récupérer les infos de l’animal
+                .ToListAsync();
+        }
+
+
     }
 }
