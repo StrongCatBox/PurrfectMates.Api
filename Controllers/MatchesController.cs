@@ -11,12 +11,7 @@ namespace PurrfectMates.Api.Controllers
     [Route("api/matches")]
     public class MatchesController : ControllerBase
     {
-        private readonly AppDbContext _db;
-
-        public MatchesController(AppDbContext db)
-        {
-            _db = db;
-        }
+   
 
 
         private readonly LikeService _likeService;
