@@ -19,5 +19,7 @@ namespace PurrfectMates.Api.Dtos
 
 
         public Role Role { get; set; } = Role.Adoptant;
+
+        public string? PhotoProfilUtilisateur { get; set; } 
     }
 }

@@ -22,6 +22,29 @@ namespace PurrfectMates.Api.Data
         public DbSet<TailleAnimal> TaillesAnimaux => Set<TailleAnimal>();
         public DbSet<TypeAnimal> TypesAnimaux => Set<TypeAnimal>();
 
-       
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Définir la clé composite pour Matching
+            modelBuilder.Entity<Match>()
+                .HasKey(m => new { m.UtilisateurId, m.AnimalId });
+
+            // Relation Match → Utilisateur
+            modelBuilder.Entity<Match>()
+                .HasOne(m => m.Utilisateur)
+                .WithMany(u => u.Matches)
+                .HasForeignKey(m => m.UtilisateurId);
+
+            // Relation Match → Animal
+            modelBuilder.Entity<Match>()
+                .HasOne(m => m.Animal)
+                .WithMany(a => a.Matches)
+                .HasForeignKey(m => m.AnimalId);
+        }
+
+
     }
 }
