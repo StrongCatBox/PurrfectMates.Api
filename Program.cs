@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models; //  nécessaire pour Swagger + sécurité JWT
 using PurrfectMates.Api.Data;
+using PurrfectMates.Api.Interfaces;
 using PurrfectMates.Api.Services;
 using System.Text;
+using PurrfectMates.Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +67,8 @@ var cs = builder.Configuration.GetConnectionString("SqlServer");
 
 //  J’ajoute Entity Framework Core pour dialoguer avec ma base SQL Server
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(cs));
+
+builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 
 
 //ici j'ajoute mon service métier LikeService
