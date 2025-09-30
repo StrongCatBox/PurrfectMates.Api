@@ -45,8 +45,8 @@ namespace PurrfectMates.Api.Controllers
                     nomUtilisateur = x.nomUtilisateur,
                     prenomUtilisateur = x.prenomUtilisateur,
                     emailUtilisateur = x.emailUtilisateur,
-                    Role = x.Role,          // ← au lieu de x.role
-                                             // ← au lieu de x.role
+                    Role = x.Role,          //  au lieu de x.role
+                                            
 
                     photoProfilUtilisateur = x.photoProfilUtilisateur
                 })
@@ -65,7 +65,7 @@ namespace PurrfectMates.Api.Controllers
                 prenomUtilisateur = dto.prenomUtilisateur,
                 emailUtilisateur = dto.emailUtilisateur,
                 //motDePasseUtilisateur = dto.motDePasseUtilisateur, // ⚠️ plus tard : à hasher
-                Role = dto.Role,        // ← au lieu de role = dto.role
+                Role = dto.Role,        //  au lieu de role = dto.role
 
                 photoProfilUtilisateur = dto.photoProfilUtilisateur
             };
@@ -96,7 +96,7 @@ namespace PurrfectMates.Api.Controllers
             u.nomUtilisateur = dto.nomUtilisateur;
             u.prenomUtilisateur = dto.prenomUtilisateur;
             u.emailUtilisateur = dto.emailUtilisateur;
-            u.Role = dto.Role;      // ← au lieu de u.role = dto.role
+            u.Role = dto.Role;      //  au lieu de u.role = dto.role
 
             u.photoProfilUtilisateur = dto.photoProfilUtilisateur;
 

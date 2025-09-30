@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PurrfectMates.Api.Dtos;
 using PurrfectMates.Api.Services;
 using PurrfectMates.Models;
 using System.Security.Claims;
@@ -19,8 +20,8 @@ namespace PurrfectMates.Api.Controllers
 
         // Un adoptant peut liker ou disliker un animal
         [Authorize(Roles = "Adoptant")]
-        [HttpPost("{animalId}")]
-        public async Task<IActionResult> Swipe(int animalId, [FromQuery] string action)
+        [HttpPost("{idAnimal}")]
+        public async Task<IActionResult> Swipe(int idAnimal, [FromQuery] string action)
         {
             try
             {
@@ -28,15 +29,16 @@ namespace PurrfectMates.Api.Controllers
                 var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
                 // J'appelle la logique métier dans LikeService
-                var like = await _likeService.AjouterLikeAsync(userId, animalId, action);
+                var like = await _likeService.AjouterLikeAsync(userId, idAnimal, action);
 
-                return Ok(new
+                return Ok(new LikeReadDto
                 {
-                    Message = "Swipe enregistré",
-                    like.IdSwipe,
-                    like.actionSwipe,
-                    like.dateSwipe
+                    IdSwipe = like.IdSwipe,
+                    AnimalId = like.idAnimal,
+                    ActionSwipe = like.actionSwipe,
+                    DateSwipe = like.dateSwipe
                 });
+
             }
             catch (Exception ex)
             {

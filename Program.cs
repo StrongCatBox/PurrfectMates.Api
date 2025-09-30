@@ -71,9 +71,13 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(cs));
 builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 
 
-//ici j'ajoute mon service métier LikeService
+//ici j'ajoute mes service métier 
 
 builder.Services.AddScoped<LikeService>();
+builder.Services.AddScoped<AnimalService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<JwtService>();
+
 
 
 //  Ici je configure l’authentification JWT (token sécurisé pour mes utilisateurs)
