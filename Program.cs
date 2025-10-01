@@ -57,10 +57,16 @@ builder.Services.AddSwaggerGen(options =>
 
 //  Je configure CORS pour autoriser uniquement mon front-end à appeler l’API
 builder.Services.AddCors(o => o.AddPolicy("frontend", b => b
-    .WithOrigins("http://localhost:5173", "http://localhost:3000") // URL du front
-    .AllowAnyHeader()  // j’autorise tous les en-têtes (Content-Type, Authorization, etc.)
-    .AllowAnyMethod()  // j’autorise toutes les méthodes HTTP (GET, POST, PUT, DELETE)
+    .WithOrigins(
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5500",   // <--- pour Live Server
+        "http://localhost:5500"    // <--- parfois VS Code met localhost au lieu de 127.0.0.1
+    )
+    .AllowAnyHeader()
+    .AllowAnyMethod()
 ));
+
 
 //  Je récupère ma chaîne de connexion SQL Server depuis appsettings.json
 var cs = builder.Configuration.GetConnectionString("SqlServer");

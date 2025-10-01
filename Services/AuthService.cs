@@ -18,30 +18,47 @@ namespace PurrfectMates.Api.Services
 
         public async Task<string?> RegisterAsync(RegisterDto dto)
         {
-            var emailExiste = await _db.Utilisateurs.AnyAsync(utilisateur => utilisateur.emailUtilisateur == dto.Email);
-            if (emailExiste) return null;
-
-            var hash = BCrypt.Net.BCrypt.HashPassword(dto.MotDePasse);
-
-            var utilisateur = new Utilisateur
+            try
             {
-                nomUtilisateur = dto.Nom,
-                prenomUtilisateur = dto.Prenom,
-                emailUtilisateur = dto.Email,
-                motDePasseUtilisateurHash = hash,
-                Role = dto.Role,
-                photoProfilUtilisateur = "default.png"
-            };
+                var emailExiste = await _db.Utilisateurs.AnyAsync(u => u.emailUtilisateur == dto.Email);
+                if (emailExiste)
+                {
+                    Console.WriteLine("DEBUG: Email déjà utilisé -> " + dto.Email);
+                    return null;
+                }
 
-            _db.Utilisateurs.Add(utilisateur);
-            await _db.SaveChangesAsync();
+                var hash = BCrypt.Net.BCrypt.HashPassword(dto.MotDePasse);
 
-            // ici j'appelle JwtService au lieu de générer moi-même
-            return _jwtService.GenerateToken(
-                utilisateur.IdUtilisateur.ToString(),
-                utilisateur.emailUtilisateur
-            );
+                var utilisateur = new Utilisateur
+                {
+                    nomUtilisateur = dto.Nom,
+                    prenomUtilisateur = dto.Prenom,
+                    emailUtilisateur = dto.Email,
+                    motDePasseUtilisateurHash = hash,
+                    Role = dto.Role,
+                    photoProfilUtilisateur = "default.png"
+                };
+
+                _db.Utilisateurs.Add(utilisateur);
+                await _db.SaveChangesAsync();
+
+                Console.WriteLine($"DEBUG: Utilisateur {utilisateur.emailUtilisateur} inséré avec Role {utilisateur.Role}");
+
+                var token = _jwtService.GenerateToken(
+                    utilisateur.IdUtilisateur.ToString(),
+                    utilisateur.emailUtilisateur
+                );
+
+                if (token == null) Console.WriteLine("DEBUG: JwtService a renvoyé null !");
+                return token;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERREUR RegisterAsync: " + ex.Message);
+                throw; // important pour voir le vrai message en debug
+            }
         }
+
 
         public async Task<string?> LoginAsync(LoginDto dto)
         {
