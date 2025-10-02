@@ -14,6 +14,13 @@ namespace PurrfectMates.Api.Services
             _db = db;
         }
 
+        public async Task<Animal?> GetByUserAsync(int userId, CancellationToken ct)
+        {
+            return await _db.Animaux
+                .FirstOrDefaultAsync(a => a.IdUtilisateur == userId, ct);
+        }
+
+
         // Récupérer tous les animaux
         public async Task<List<AnimalReadDto>> GetAllAsync(CancellationToken ct)
         {
@@ -62,13 +69,41 @@ namespace PurrfectMates.Api.Services
                 race = animalDto.race,
                 age = animalDto.age,
                 IdUtilisateur = userId,
-                IdNiveauActivite = animalDto.IdNiveauActivite,
-                IdTailleAnimal = animalDto.IdTailleAnimal,
-                IdTypeAnimal = animalDto.IdTypeAnimal,
+                IdNiveauActivite = animalDto.niveauActiviteId,  
+                IdTailleAnimal = animalDto.tailleAnimalId,
+                IdTypeAnimal = animalDto.typeAnimalId,
                 descriptionAnimal = animalDto.descriptionAnimal
             };
 
             _db.Animaux.Add(animalEntity);
+            await _db.SaveChangesAsync(ct);
+
+            // Ajouter les tempéraments
+            if (animalDto.TemperamentIds != null && animalDto.TemperamentIds.Any())
+            {
+                foreach (var tempId in animalDto.TemperamentIds)
+                {
+                    _db.TemperamentsParAnimaux.Add(new TemperamentParAnimal
+                    {
+                        IdAnimal = animalEntity.IdAnimal,
+                        IdTemperament = tempId
+                    });
+                }
+            }
+
+            // Ajouter les logements
+            if (animalDto.TypeLogementIds != null && animalDto.TypeLogementIds.Any())
+            {
+                foreach (var logId in animalDto.TypeLogementIds)
+                {
+                    _db.LogementsParAnimaux.Add(new LogementParAnimal
+                    {
+                        IdAnimal = animalEntity.IdAnimal,
+                        IdTypeLogement = logId
+                    });
+                }
+            }
+
             await _db.SaveChangesAsync(ct);
 
             return new AnimalReadDto
@@ -84,7 +119,6 @@ namespace PurrfectMates.Api.Services
                 descriptionAnimal = animalEntity.descriptionAnimal
             };
         }
-
         // Modifier un animal
         public async Task<bool> UpdateAsync(int userId, int id, AnimalUpdateDto animalDto, CancellationToken ct)
         {

@@ -2,6 +2,7 @@
 using PurrfectMates.Models;
 
 
+
 namespace PurrfectMates.Api.Data
 {
 
@@ -21,6 +22,11 @@ namespace PurrfectMates.Api.Data
         public DbSet<NiveauActivite> NiveauxActivites => Set<NiveauActivite>();
         public DbSet<TailleAnimal> TaillesAnimaux => Set<TailleAnimal>();
         public DbSet<TypeAnimal> TypesAnimaux => Set<TypeAnimal>();
+        public DbSet<Temperament> Temperaments => Set<Temperament>();
+        public DbSet<TypeLogement> TypesLogements => Set<TypeLogement>();
+        public DbSet<TemperamentParAnimal> TemperamentsParAnimaux => Set<TemperamentParAnimal>();
+        public DbSet<LogementParAnimal> LogementsParAnimaux => Set<LogementParAnimal>();
+        public DbSet<Photo> Photos => Set<Photo>();
 
 
 
@@ -28,21 +34,78 @@ namespace PurrfectMates.Api.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Définir la clé composite pour Matching
-            modelBuilder.Entity<Match>()
-                .HasKey(m => new { m.UtilisateurId, m.AnimalId });
+            //  Configuration TemperamentParAnimal 
 
-            // Relation Match → Utilisateur
-            modelBuilder.Entity<Match>()
-                .HasOne(m => m.Utilisateur)
-                .WithMany(u => u.Matches)
-                .HasForeignKey(m => m.UtilisateurId);
+            // Définir la clé primaire composite (idAnimal + idTemperament)
+            modelBuilder.Entity<TemperamentParAnimal>()
+                .HasKey(temperamentParAnimal => new
+                {
+                    temperamentParAnimal.IdAnimal,
+                    temperamentParAnimal.IdTemperament
+                });
 
-            // Relation Match → Animal
+            // Relation: TemperamentParAnimal -> Animal
+            modelBuilder.Entity<TemperamentParAnimal>()
+                .HasOne(temperamentParAnimal => temperamentParAnimal.Animal)
+                .WithMany(animal => animal.TemperamentsParAnimaux)
+                .HasForeignKey(temperamentParAnimal => temperamentParAnimal.IdAnimal);
+
+            // Relation: TemperamentParAnimal -> Temperament
+            modelBuilder.Entity<TemperamentParAnimal>()
+                .HasOne(temperamentParAnimal => temperamentParAnimal.Temperament)
+                .WithMany()
+                .HasForeignKey(temperamentParAnimal => temperamentParAnimal.IdTemperament);
+
+            //  Configuration LogementParAnimal 
+
+            // Définir la clé primaire composite (idAnimal + idTypeLogement)
+            modelBuilder.Entity<LogementParAnimal>()
+                .HasKey(logementParAnimal => new
+                {
+                    logementParAnimal.IdAnimal,
+                    logementParAnimal.IdTypeLogement
+                });
+
+            // Relation: LogementParAnimal -> Animal
+            modelBuilder.Entity<LogementParAnimal>()
+                .HasOne(logementParAnimal => logementParAnimal.Animal)
+                .WithMany(animal => animal.LogementsParAnimaux)
+                .HasForeignKey(logementParAnimal => logementParAnimal.IdAnimal);
+
+            // Relation: LogementParAnimal -> TypeLogement
+            modelBuilder.Entity<LogementParAnimal>()
+                .HasOne(logementParAnimal => logementParAnimal.TypeLogement)
+                .WithMany()
+                .HasForeignKey(logementParAnimal => logementParAnimal.IdTypeLogement);
+
+            //  Configuration Match 
+
+            // Définir la clé primaire composite (UtilisateurId + AnimalId)
             modelBuilder.Entity<Match>()
-                .HasOne(m => m.Animal)
-                .WithMany(a => a.Matches)
-                .HasForeignKey(m => m.AnimalId);
+                .HasKey(match => new
+                {
+                    match.UtilisateurId,
+                    match.AnimalId
+                });
+
+            // Relation: Match -> Utilisateur
+            modelBuilder.Entity<Match>()
+                .HasOne(match => match.Utilisateur)
+                .WithMany(utilisateur => utilisateur.Matches)
+                .HasForeignKey(match => match.UtilisateurId);
+
+            // Relation: Match -> Animal
+            modelBuilder.Entity<Match>()
+                .HasOne(match => match.Animal)
+                .WithMany(animal => animal.Matches)
+                .HasForeignKey(match => match.AnimalId);
+
+            //Configuration Photo
+
+            modelBuilder.Entity<Photo>()
+                .HasOne(photo => photo.Animal)
+                .WithMany(animal => animal.Photos)
+                .HasForeignKey(photo => photo.IdAnimal);
         }
 
 

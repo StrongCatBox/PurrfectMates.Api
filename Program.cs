@@ -83,6 +83,7 @@ builder.Services.AddScoped<LikeService>();
 builder.Services.AddScoped<AnimalService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<ReferenceDataService>();
 
 
 

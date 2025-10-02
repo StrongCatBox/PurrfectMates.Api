@@ -38,7 +38,24 @@ namespace PurrfectMates.Api.Controllers
                 return Ok(animal);
         }
 
-        [Authorize(Roles = "Proprietaire")]
+        //[Authorize(Roles = "Proprietaire")]
+        [Authorize]
+        [HttpGet("mine")]
+        public async Task<IActionResult> GetMine(CancellationToken ct)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var animal = await _animalService.GetByUserAsync(userId, ct);
+
+            if (animal == null)
+                return NotFound();
+
+            return Ok(animal);
+        }
+
+
+        //[Authorize(Roles = "Proprietaire")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AnimalCreateDto animalDto, CancellationToken ct)
         {
